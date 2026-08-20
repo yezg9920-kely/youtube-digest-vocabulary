@@ -47,7 +47,15 @@ jobs:
           PACKAGE_SHA256: ${{ steps.package.outputs.checksum }}
         run: |
           cat > "$RUNNER_TEMP/release-notes.md" <<EOF
-          YouTube Digest Vocabulary 把 YouTube 视频转成可核验、可复习的学习资料。
+          YouTube Digest Vocabulary turns YouTube videos into verifiable, reviewable learning materials.
+
+          YouTube Digest Vocabulary 将 YouTube 视频转成可核验、可复习的学习资料。
+
+          ## Attribution and derivative-work notice
+
+          This release is a derivative work and remix based on the original [YouTube Digest](https://github.com/zarazhangrui/youtube-digest) project by Zara Zhang.
+
+          Thank you to Zara Zhang and the original project contributors for creating, publishing, and maintaining the foundation used by this release. This repository is independently maintained and is not the official upstream repository. The original MIT copyright and license notice are preserved in `LICENSE`; see the bilingual [NOTICE.md](https://github.com/yezg9920-kely/youtube-digest-vocabulary/blob/main/NOTICE.md) for complete attribution.
 
           ## 原项目与二次创作说明
 
@@ -55,18 +63,20 @@ jobs:
 
           感谢 Zara Zhang 及原项目贡献者创建、公开并持续维护这一基础项目。本仓库由二创维护者独立维护，并非原项目的官方仓库。原项目的 MIT 版权与许可声明保留在安装包的 LICENSE 中，完整中英文署名见 [NOTICE.md](https://github.com/yezg9920-kely/youtube-digest-vocabulary/blob/main/NOTICE.md)。
 
-          ## 本次版本亮点
+          本版本是基于 [YouTube Digest](https://github.com/zarazhangrui/youtube-digest) 原项目完成的二次创作，由 Zara Zhang 创建并维护的原项目是本版本的原创来源。
 
-          - Overview 默认展示一句话结论、重点结论与章节，并可回到本地逐字稿证据。
-          - Deep Analysis 改为显式触发，避免切换标签时意外产生 AI 费用。
-          - 支持字幕、双语翻译、笔记、生词卡以及 Markdown、CSV、Anki TSV 导出。
-          - 缓存与 AI 结果按视频字幕指纹隔离，避免跨视频污染和重复付费。
+          ## What's included / 本次版本亮点
 
-          ## 安装
+          - The Overview shows a one-sentence takeaway, key conclusions, and chapters, with links back to local transcript evidence. / Overview 默认展示一句话结论、重点结论与章节，并可回到本地逐字稿证据。
+          - Deep Analysis is explicitly triggered, avoiding accidental AI charges when switching tabs. / Deep Analysis 改为显式触发，避免切换标签时意外产生 AI 费用。
+          - Includes transcripts, bilingual translation, notes, vocabulary cards, and Markdown, CSV, and Anki TSV exports. / 支持字幕、双语翻译、笔记、生词卡以及 Markdown、CSV、Anki TSV 导出。
+          - Cache and AI results are isolated by transcript fingerprint to avoid cross-video contamination and duplicate charges. / 缓存与 AI 结果按视频字幕指纹隔离，避免跨视频污染和重复付费。
 
-          下载 ZIP 并解压，在 Chrome 打开 chrome://extensions，启用开发者模式，点击“加载已解压的扩展程序”，选择直接包含 manifest.json 的目录。
+          ## Installation / 安装
 
-          ## 校验值
+          Download and extract the ZIP. Open chrome://extensions in Chrome, enable Developer mode, click “Load unpacked,” and choose the directory that directly contains manifest.json. / 下载 ZIP 并解压，在 Chrome 打开 chrome://extensions，启用开发者模式，点击“加载已解压的扩展程序”，选择直接包含 manifest.json 的目录。
+
+          ## Checksum / 校验值
 
           SHA-256: \`$PACKAGE_SHA256\`
           EOF
