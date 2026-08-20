@@ -283,6 +283,20 @@ test("release credits the original project and labels this repository as a deriv
   }
 });
 
+test("release workflow refreshes assets and repeats the original-project credit", () => {
+  const workflow = read(".github/workflows/release.yml");
+
+  assert.match(workflow, /gh release upload[\s\S]*--clobber/);
+  assert.match(workflow, /gh release edit[\s\S]*--notes-file/);
+  assert.match(
+    workflow,
+    /https:\/\/github\.com\/zarazhangrui\/youtube-digest/,
+  );
+  assert.match(workflow, /二次创作/);
+  assert.match(workflow, /感谢 Zara Zhang/);
+  assert.match(workflow, /并非原项目的官方仓库/);
+});
+
 test("notes filters preserve selected contrast and expose pressed state", () => {
   const html = read("sidepanel.html");
   const css = read("sidepanel.css");
