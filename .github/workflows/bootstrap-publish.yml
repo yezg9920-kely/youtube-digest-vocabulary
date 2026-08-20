@@ -24,7 +24,6 @@ jobs:
           base64 --decode "$RUNNER_TEMP/source.tar.gz.b64" > "$RUNNER_TEMP/source.tar.gz"
           tar -xzf "$RUNNER_TEMP/source.tar.gz"
           rm source-part-a.b64 source-part-b.b64
-          rm .github/workflows/bootstrap-publish.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
