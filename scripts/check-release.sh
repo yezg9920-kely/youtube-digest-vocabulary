@@ -241,7 +241,13 @@ for file in "${javascript_files[@]}"; do
 done
 
 if compgen -G "tests/*.test.js" >/dev/null; then
-  node --test tests/*.test.js
+  if [[ "$mode" == "--print-files" ]]; then
+    # Keep stdout machine-readable for package-extension.sh. The test report
+    # remains visible on stderr without being mistaken for ZIP input paths.
+    node --test tests/*.test.js >&2
+  else
+    node --test tests/*.test.js
+  fi
 fi
 
 if ((${#javascript_files[@]} > 0)); then
