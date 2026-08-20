@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Digest Vocabulary</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <!-- HEADER -->
+    <!-- Note: the panel's own "YouTube Digest Vocabulary" title is shown by Chrome's side-panel
+         title bar, so we don't repeat a logo here. -->
+    <div class="header">
+      <div class="header-top">
+        <!-- Video info -->
+        <div class="video-info" id="videoInfo" style="display: none">
+          <div class="video-title" id="videoTitle"></div>
+          <div class="video-channel" id="videoChannel"></div>
+        </div>
+        <button
+          class="settings-btn"
+          id="settingsBtn"
+          type="button"
+          title="Open YouTube Digest Vocabulary settings"
+          aria-label="Open YouTube Digest Vocabulary settings"
+        >
+          Settings
+        </button>
+      </div>
+
+      <!-- Tab navigation -->
+      <div
+        class="tabs"
+        id="tabsNav"
+        role="tablist"
+        aria-label="学习内容"
+        style="display: none"
+      >
+        <button class="tab active" id="tab-overview" role="tab" aria-selected="true" aria-controls="panel-overview" tabindex="0" data-tab="overview" type="button">概览</button>
+        <button class="tab" id="tab-transcript" role="tab" aria-selected="false" aria-controls="panel-transcript" tabindex="-1" data-tab="transcript" type="button">字幕</button>
+        <button class="tab" id="tab-notes" role="tab" aria-selected="false" aria-controls="panel-notes" tabindex="-1" data-tab="notes" type="button">笔记</button>
+        <button class="tab" id="tab-vocabulary" role="tab" aria-selected="false" aria-controls="panel-vocabulary" tabindex="-1" data-tab="vocabulary" type="button">单词</button>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="content" id="contentArea">
+      <!-- WELCOME STATE -->
+      <div id="welcomeState" class="welcome-container">
+        <div class="welcome-icon">&#9655;</div>
+        <div class="welcome-title">Ready to Digest</div>
+        <div class="welcome-desc">
+          Navigate to a YouTube video and click the extension icon to get an
+          AI-powered digest.
+        </div>
+      </div>
+
+      <!-- LOADING STATE -->
+      <div id="loadingState" style="display: none">
+        <div class="loading-container">
+          <div class="loading-bar"></div>
+          <div class="loading-text" id="loadingText">Fetching transcript</div>
+          <div class="loading-subtext" id="loadingSubtext">
+            Extracting captions from video...
+          </div>
+        </div>
+      </div>
+
+      <!-- ERROR STATE -->
+      <div id="errorState" role="alert" aria-live="assertive" style="display: none">
+        <div class="error-container">
+          <div class="error-icon">&#9888;</div>
+          <div class="error-title" id="errorTitle">Error</div>
+          <div class="error-message" id="errorMessage">
+            Something went wrong.
+          </div>
+          <div
+            class="error-message"
+            id="errorCostNote"
+            style="display: none"
+          ></div>
+          <button class="error-btn" id="errorBtn" type="button">
+            Try Again
+          </button>
+          <button
+            class="error-btn"
+            id="errorSecondaryBtn"
+            type="button"
+            style="display: none"
+          >
+            Open Settings
+          </button>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="resultsState" style="display: none">
+        <!-- TAB: Overview (default learning path) -->
+        <div id="panel-overview" class="tab-panel active" data-panel="overview" role="tabpanel" aria-labelledby="tab-overview">
+          <div class="overview-shell" id="overviewState" aria-busy="false">
+            <header class="overview-heading">
+              <div>
+                <div class="overview-eyebrow">学习概览 · Grounded overview</div>
+                <h1>先抓结论，再回到原文</h1>
+              </div>
+              <span class="overview-status-badge" id="overviewStatusBadge"></span>
+            </header>
+
+            <section class="overview-loading-state" id="overviewLoadingState" role="status" aria-live="polite">
+              <div class="overview-progress-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+              <div>
+                <h2 id="overviewLoadingTitle">正在准备基础概览</h2>
+                <p id="overviewLoadingMessage">字幕就绪后，会在这里整理可核验的结论。</p>
+              </div>
+            </section>
+
+            <section class="overview-message-state" id="overviewErrorState" aria-live="polite" style="display: none">
+              <div class="overview-message-mark" aria-hidden="true">i</div>
+              <div class="overview-message-copy">
+                <h2 id="overviewErrorTitle"></h2>
+                <p id="overviewErrorMessage"></p>
+                <p class="overview-cost-note" id="overviewErrorCostNote"></p>
+                <div class="overview-message-actions">
+                  <button class="overview-primary-btn" id="overviewPrimaryActionBtn" type="button"></button>
+                  <button class="overview-secondary-btn" id="overviewSecondaryActionBtn" type="button" style="display: none"></button>
+                </div>
+              </div>
+            </section>
+
+            <div class="overview-ready-state" id="overviewReadyState" style="display: none">
+              <section class="overview-takeaway" aria-labelledby="overviewTakeawayTitle">
+                <div class="overview-section-kicker" id="overviewTakeawayTitle">一句话带走</div>
+                <p id="overviewOneSentence"></p>
+              </section>
+
+              <section class="overview-section" aria-labelledby="overviewConclusionsTitle">
+                <div class="overview-section-heading">
+                  <div>
+                    <div class="overview-section-index">01</div>
+                    <h2 id="overviewConclusionsTitle">核心结论</h2>
+                  </div>
+                  <span>点击证据可核对本地逐字稿</span>
+                </div>
+                <div class="overview-conclusion-list" id="overviewConclusions"></div>
+              </section>
+
+              <section class="overview-section" aria-labelledby="overviewChaptersTitle">
+                <div class="overview-section-heading">
+                  <div>
+                    <div class="overview-section-index">02</div>
+                    <h2 id="overviewChaptersTitle">内容脉络</h2>
+                  </div>
+                  <span>点击时间可跳转视频</span>
+                </div>
+                <ol class="overview-chapter-list" id="overviewChapterList"></ol>
+              </section>
+
+              <div class="overview-cache-warning" id="overviewCacheWarning" role="status" style="display: none">
+                <p id="overviewCacheWarningMessage"></p>
+                <button class="overview-secondary-btn" id="overviewCacheRetryBtn" type="button">仅重试本地保存</button>
+              </div>
+            </div>
+
+            <section class="deep-analysis-card" id="deepAnalysisCard" aria-busy="false" aria-labelledby="deepAnalysisTitle">
+              <header class="deep-analysis-card-header">
+                <div>
+                  <div class="overview-section-kicker">可选进阶 · 手动触发</div>
+                  <h2 id="deepAnalysisTitle">Deep Analysis</h2>
+                  <p>深入拆解论证、局限、行动建议与主动回忆问题。只有你明确点击后才会调用 AI。</p>
+                </div>
+                <button class="overview-primary-btn" id="deepAnalysisActionBtn" type="button">生成深度分析</button>
+              </header>
+              <div class="deep-analysis-state" id="deepAnalysisState">
+                <div class="analysis-status" id="analysisStatus" role="status" aria-live="polite">尚未生成，不会自动消耗额度。</div>
+                <button class="enhance-btn" id="analysisRecoveryContextBtn" type="button" style="display: none"></button>
+              </div>
+
+              <div class="deep-analysis-results" id="deepAnalysisResults" style="display: none">
+                <div class="section analysis-report-header">
+                  <div>
+                    <div class="section-title">深度学习报告</div>
+                    <p class="analysis-report-intro">中文深度解读、论证拆解、批判性分析和复习问题</p>
+                  </div>
+                  <div class="analysis-export-actions">
+                    <button class="enhance-btn" id="regenerateAnalysisBtn" type="button">重新生成</button>
+                    <button class="enhance-btn" id="analysisExportReportBtn" type="button" disabled>Report MD</button>
+                    <button class="enhance-btn" id="analysisExportStudyPackBtn" type="button" disabled>Study Pack</button>
+                  </div>
+                </div>
+
+                <section class="analysis-takeaway" aria-labelledby="analysisTakeawayTitle">
+                  <div class="analysis-kicker" id="analysisTakeawayTitle">一句话看懂</div>
+                  <p id="analysisOneSentence"></p>
+                </section>
+
+                <div class="section analysis-summary-section">
+                  <div class="section-title">内容概括</div>
+                  <div class="analysis-summary-copy" id="analysisExecutiveSummary"></div>
+                  <div class="analysis-thesis-grid">
+                    <article><div class="analysis-kicker">核心论点</div><p id="analysisCoreThesis"></p></article>
+                    <article><div class="analysis-kicker">为什么重要</div><p id="analysisWhyItMatters"></p></article>
+                  </div>
+                </div>
+
+                <div class="section"><div class="section-title">关键洞见与证据</div><div class="analysis-card-list" id="analysisInsights"></div></div>
+                <div class="section"><div class="section-title">论证结构</div><div class="analysis-card-list" id="analysisArgumentMap"></div></div>
+
+                <div class="section">
+                  <div class="section-title">批判性拆解</div>
+                  <div class="analysis-critical-grid">
+                    <article><div class="analysis-kicker">优点</div><ul id="analysisStrengths"></ul></article>
+                    <article><div class="analysis-kicker">局限</div><ul id="analysisLimitations"></ul></article>
+                    <article><div class="analysis-kicker">隐藏前提</div><ul id="analysisAssumptions"></ul></article>
+                    <article><div class="analysis-kicker">开放问题</div><ul id="analysisOpenQuestions"></ul></article>
+                  </div>
+                </div>
+
+                <div class="section analysis-two-column">
+                  <div><div class="section-title">可执行启发</div><ol class="analysis-action-list" id="analysisActionItems"></ol></div>
+                  <div><div class="section-title">主动回忆</div><div id="analysisReviewQuestions"></div></div>
+                </div>
+
+                <div class="section">
+                  <div class="section-title">内容结构与章节</div>
+                  <ul class="chapter-list" id="chapterList"></ul>
+                </div>
+                <div class="section">
+                  <div class="section-title">关键原话</div>
+                  <div id="quotesList"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- TAB: Transcript (authoritative source; no LLM required) -->
+        <div id="panel-transcript" class="tab-panel" data-panel="transcript" role="tabpanel" aria-labelledby="tab-transcript" hidden>
+          <div class="section">
+            <div class="section-header transcript-section-header">
+              <div class="transcript-header-main">
+                <div class="section-title-wrap"><div class="section-title">完整字幕</div></div>
+                <div class="transcript-mode-control" id="transcriptModeControl" role="group" aria-label="字幕语言">
+                  <button class="transcript-mode-btn active" type="button" data-transcript-mode="original" aria-pressed="true">Original</button>
+                  <button class="transcript-mode-btn" type="button" data-transcript-mode="zh" aria-pressed="false">中文</button>
+                  <button class="transcript-mode-btn" type="button" data-transcript-mode="bilingual" aria-pressed="false">双语</button>
+                  <span class="translation-spinner" id="langSpinner" aria-label="正在翻译"></span>
+                </div>
+              </div>
+              <div class="transcript-actions">
+                <button class="enhance-btn" id="copyTranscriptBtn" type="button" aria-label="Copy Original transcript">Copy</button>
+                <button class="enhance-btn" id="exportTranscriptBtn" type="button" aria-label="Export Original transcript as TXT">TXT</button>
+                <button class="enhance-btn" id="exportCleanTranscriptBtn" type="button" aria-label="Export Original transcript as clean Markdown">Clean MD</button>
+              </div>
+            </div>
+            <div class="transcript-export-status" id="transcriptExportStatus" role="status"></div>
+            <div id="transcriptList"></div>
+          </div>
+        </div>
+
+        <!-- TAB: Notes -->
+        <div id="panel-notes" class="tab-panel" data-panel="notes" role="tabpanel" aria-labelledby="tab-notes" hidden>
+          <div class="section">
+            <div class="section-header">
+              <div class="section-title">Saved Notes</div>
+              <div class="notes-filter">
+                <button
+                  class="enhance-btn active"
+                  id="notesFilterThis"
+                  aria-pressed="true"
+                >
+                  This Video
+                </button>
+                <button
+                  class="enhance-btn"
+                  id="notesFilterAll"
+                  aria-pressed="false"
+                >
+                  All Notes
+                </button>
+              </div>
+            </div>
+            <p class="notes-intro" id="notesIntro">
+              Move your mouse over the video and click the 📝 Note button to
+              save timestamped notes, or press the "n" key while the video is
+              focused.
+            </p>
+            <div id="notesList"></div>
+          </div>
+        </div>
+
+        <!-- TAB: Vocabulary -->
+        <div id="panel-vocabulary" class="tab-panel" data-panel="vocabulary" role="tabpanel" aria-labelledby="tab-vocabulary" hidden>
+          <div class="section vocabulary-section">
+            <div
+              class="vocabulary-config-notice"
+              id="vocabularyConfigNotice"
+              role="status"
+              style="display: none"
+            >
+              <span id="vocabularyConfigMessage"></span>
+              <button
+                class="enhance-btn"
+                id="vocabularyConfigSettings"
+                type="button"
+              >
+                Open settings
+              </button>
+            </div>
+            <div class="vocabulary-library-header">
+              <div>
+                <div class="section-title">Vocabulary</div>
+                <div class="vocabulary-count" id="vocabularyCount">
+                  0 saved words
+                </div>
+              </div>
+              <div class="vocabulary-export-actions" aria-label="Export vocabulary">
+                <button class="enhance-btn" type="button" data-vocabulary-export="csv">CSV</button>
+                <button class="enhance-btn" type="button" data-vocabulary-export="markdown">Markdown</button>
+                <button class="enhance-btn" type="button" data-vocabulary-export="anki">Anki TSV</button>
+              </div>
+            </div>
+            <label class="vocabulary-search-label" for="vocabularySearch">
+              Search saved words
+            </label>
+            <input
+              class="vocabulary-search"
+              id="vocabularySearch"
+              type="search"
+              placeholder="Search English, 中文, or video title"
+              autocomplete="off"
+            />
+            <div class="vocabulary-export-status" id="vocabularyExportStatus" role="status"></div>
+            <p class="vocabulary-empty" id="vocabularyEmpty">
+              Click an English word in a transcript, build its bilingual memory
+              card, then add it here.
+            </p>
+            <div id="vocabularyList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <dialog
+      id="evidenceDialog"
+      class="evidence-dialog"
+      aria-modal="true"
+      aria-labelledby="evidenceDialogTitle"
+      aria-describedby="evidenceDialogDescription"
+    >
+      <div class="evidence-dialog-shell">
+        <header class="evidence-dialog-header">
+          <div>
+            <div class="overview-section-kicker">本地逐字稿证据</div>
+            <h2 id="evidenceDialogTitle">核对这条结论</h2>
+            <p id="evidenceDialogDescription">
+              原文、时间与相邻上下文均来自当前本地逐字稿。
+            </p>
+          </div>
+          <button
+            class="evidence-dialog-close"
+            id="evidenceDialogCloseBtn"
+            type="button"
+            aria-label="关闭证据对话框"
+          >×</button>
+        </header>
+
+        <div class="evidence-dialog-meta">
+          <span id="evidenceTimestamp"></span>
+          <span>已按本地 segment ID 核验</span>
+        </div>
+
+        <section class="evidence-source-card" aria-labelledby="evidenceSourceTitle">
+          <h3 id="evidenceSourceTitle">逐字稿原文</h3>
+          <blockquote id="evidenceExactText"></blockquote>
+          <div class="evidence-context-grid">
+            <div id="evidencePreviousContext"></div>
+            <div id="evidenceNextContext"></div>
+          </div>
+        </section>
+
+        <section class="evidence-ai-note" aria-labelledby="evidenceAiTitle">
+          <h3 id="evidenceAiTitle">AI 解释 / 转述</h3>
+          <p id="evidenceAiExplanation"></p>
+          <small>这是 AI 的解释，不是可复制的逐字稿原文。</small>
+        </section>
+
+        <footer class="evidence-dialog-actions">
+          <div id="evidenceCopyStatus" role="status" aria-live="polite"></div>
+          <button class="overview-secondary-btn" id="evidenceCopyBtn" type="button">复制这段原文</button>
+          <button class="overview-primary-btn" id="evidenceSeekBtn" type="button">跳到视频原处</button>
+        </footer>
+      </div>
+    </dialog>
+
+    <!-- Auto-scroll follow button — appears when user scrolls away from playback position -->
+    <button
+      class="follow-playback-btn"
+      id="followPlaybackBtn"
+      style="display: none"
+    >
+      Follow playback
+    </button>
+
+    <script src="settings.js"></script>
+    <script src="transcript-core.js"></script>
+    <script src="overview-core.js"></script>
+    <script src="sidepanel.js"></script>
+  </body>
+</html>
