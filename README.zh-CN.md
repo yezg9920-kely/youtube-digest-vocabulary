@@ -2,6 +2,14 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+## 原项目与二次创作说明
+
+**原创来源：** [zarazhangrui/youtube-digest](https://github.com/zarazhangrui/youtube-digest)，由 Zara Zhang 创建，是本项目的原创来源和基础项目。
+
+YouTube Digest Vocabulary 是在该原项目基础上完成的二次创作版本。感谢 Zara Zhang 及原项目贡献者创建、公开并持续维护这一基础，让本版本得以继续扩展。原项目的 MIT 版权与许可声明完整保留在 [LICENSE](LICENSE) 中，更多署名信息见 [NOTICE.md](NOTICE.md)。
+
+本仓库由二创维护者独立维护，并非原项目的官方仓库。本版本新增的生词学习、证据核对、导出、界面和可靠性改动属于这个二创版本；原项目自身的历史与说明请以上方原仓库为准。
+
 把每个 YouTube 视频变成一份可以深入学习的资料。YouTube Digest Vocabulary 把字幕、双语翻译、AI 概览、内容讲解和时间戳笔记放进同一个 Chrome 侧边栏，让你可以持续学习视频中的知识和语言，同时不丢失原视频上下文。
 
 - 把零碎字幕变成清晰、可搜索的学习资料。
@@ -178,7 +186,7 @@ DeepSeek 说明这些价格可能很快上调，因此使用此估算前必须�
 
 ## 用编程 Agent 改造成自己的版本
 
-这是一个个人 Remix 项目，不接受上游 Issue 或 Pull Request。如果功能出错，或者你想增加新功能，请下载或 Fork 自己的副本，再让你的编程 Agent 帮你修复、改造和个性化。
+这是基于原项目 [YouTube Digest](https://github.com/zarazhangrui/youtube-digest) 的独立二次创作版本。本仓库不接受上游 Issue 或 Pull Request。如果功能出错，或者你想增加新功能，请下载或 Fork 自己的副本，再让你的编程 Agent 帮你修复、改造和个性化。
 
 YouTube Digest Vocabulary 使用原生 HTML、CSS 和 JavaScript，没有构建步骤，很适合用编程 Agent 做个人项目。你可以尝试：
 
