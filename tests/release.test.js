@@ -297,6 +297,15 @@ test("release workflow refreshes assets and repeats the original-project credit"
   assert.match(workflow, /并非原项目的官方仓库/);
 });
 
+test("package file enumeration keeps test reporter output off stdout", () => {
+  const releaseCheck = read("scripts/check-release.sh");
+
+  assert.match(
+    releaseCheck,
+    /if \[\[ "\$mode" == "--print-files" \]\]; then[\s\S]*node --test tests\/\*\.test\.js >&2[\s\S]*else[\s\S]*node --test tests\/\*\.test\.js/,
+  );
+});
+
 test("notes filters preserve selected contrast and expose pressed state", () => {
   const html = read("sidepanel.html");
   const css = read("sidepanel.css");
