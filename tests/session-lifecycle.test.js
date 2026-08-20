@@ -18,8 +18,9 @@ function deferred() {
   return { promise, resolve };
 }
 
-async function waitUntil(predicate, turns = 30) {
-  for (let turn = 0; turn < turns; turn += 1) {
+async function waitUntil(predicate, timeoutMs = 1000) {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() <= deadline) {
     if (predicate()) return;
     await new Promise((resolve) => setImmediate(resolve));
   }
