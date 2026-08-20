@@ -2,6 +2,14 @@
 
 [English](README.md) | [简体中文](README.zh-CN.md)
 
+## Attribution and derivative-work notice
+
+**Original project:** [zarazhangrui/youtube-digest](https://github.com/zarazhangrui/youtube-digest), created by Zara Zhang, is the original project and source of this work.
+
+YouTube Digest Vocabulary is a derivative work and remix built from that project. Thank you to Zara Zhang and the original project contributors for creating, publishing, and maintaining the foundation that made this version possible. The original MIT copyright and permission notice are preserved in [LICENSE](LICENSE), with additional attribution in [NOTICE.md](NOTICE.md).
+
+This repository is independently maintained and is not the official upstream repository. Its added vocabulary-learning, evidence, export, interface, and reliability changes belong to this derivative version; the original project's own history and documentation remain available at the link above.
+
 Turn every YouTube video into a resource for deep learning. YouTube Digest Vocabulary brings transcripts, bilingual translation, AI overviews, explanations, and timestamped notes into one Chrome side panel, so you can study ideas and language without losing your place.
 
 - Turn captions into a readable, searchable learning resource.
@@ -167,7 +175,7 @@ Translation is lazy and progressive. Cached segments are reused, and only rows y
 
 ## Remix it with your coding agent
 
-This is a personal remix project. Upstream issues and pull requests are not accepted. If something breaks or you want a new feature, download or fork your own copy and ask your coding agent to fix, remix, or personalize it for you.
+This is an independently maintained derivative of the original [YouTube Digest](https://github.com/zarazhangrui/youtube-digest) project. Upstream issues and pull requests are not accepted here. If something breaks or you want a new feature, download or fork your own copy and ask your coding agent to fix, remix, or personalize it for you.
 
 YouTube Digest Vocabulary uses plain HTML, CSS, and JavaScript with no build step, so it is a friendly starting point for agent-assisted projects. Ideas to try:
 
