@@ -248,6 +248,41 @@ test("release copy documents current scope without em dashes", () => {
   assert.match(chineseReadme, /发布版本只支持 DeepSeek V4 Flash/);
 });
 
+test("release credits the original project and labels this repository as a derivative", () => {
+  const readme = read("README.md");
+  const chineseReadme = read("README.zh-CN.md");
+  const notice = read("NOTICE.md");
+  const license = read("LICENSE");
+  const upstreamUrl = "https://github.com/zarazhangrui/youtube-digest";
+
+  assert.match(readme, /^## Attribution and derivative-work notice$/m);
+  assert.ok(readme.includes(upstreamUrl));
+  assert.match(readme, /original project/i);
+  assert.match(readme, /derivative work|remix/i);
+  assert.match(readme, /thank you to Zara Zhang/i);
+  assert.match(readme, /not the official upstream repository/i);
+
+  assert.match(chineseReadme, /^## 原项目与二次创作说明$/m);
+  assert.ok(chineseReadme.includes(upstreamUrl));
+  assert.match(chineseReadme, /原创来源/);
+  assert.match(chineseReadme, /二次创作/);
+  assert.match(chineseReadme, /感谢 Zara Zhang/);
+  assert.match(chineseReadme, /并非原项目的官方仓库/);
+
+  assert.ok(notice.includes(upstreamUrl));
+  assert.match(notice, /Original project: YouTube Digest/);
+  assert.match(notice, /Original author and copyright holder: Zara Zhang/);
+  assert.match(notice, /derivative work \(remix\)/i);
+  assert.match(notice, /感谢 Zara Zhang/);
+  assert.match(notice, /Copyright \(c\) 2026 Zara Zhang/);
+  assert.match(license, /Copyright \(c\) 2026 Zara Zhang/);
+
+  for (const file of ["NOTICE.md", "LICENSE"]) {
+    assert.ok(releaseShellArray("public_allowlist").includes(file));
+    assert.ok(releaseShellArray("required_public_files").includes(file));
+  }
+});
+
 test("notes filters preserve selected contrast and expose pressed state", () => {
   const html = read("sidepanel.html");
   const css = read("sidepanel.css");
