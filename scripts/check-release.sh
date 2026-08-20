@@ -52,6 +52,7 @@ public_allowlist=(
   "README.zh-CN.md"
   "PRIVACY.md"
   "SECURITY.md"
+  "NOTICE.md"
   "LICENSE"
 )
 
@@ -75,6 +76,7 @@ required_public_files=(
   "README.zh-CN.md"
   "PRIVACY.md"
   "SECURITY.md"
+  "NOTICE.md"
   "LICENSE"
 )
 
