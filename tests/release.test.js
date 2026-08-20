@@ -294,6 +294,11 @@ test("release workflow refreshes assets and repeats the original-project credit"
   );
   assert.match(workflow, /二次创作/);
   assert.match(workflow, /感谢 Zara Zhang/);
+  assert.match(workflow, /Thank you to Zara Zhang/);
+  assert.match(workflow, /Attribution and derivative-work notice/);
+  assert.match(workflow, /What's included \/ 本次版本亮点/);
+  assert.match(workflow, /Installation \/ 安装/);
+  assert.match(workflow, /Checksum \/ 校验值/);
   assert.match(workflow, /并非原项目的官方仓库/);
 });
 
